@@ -1,3 +1,4 @@
+import Core.SparkValueIdentifier
 import IO.Reader.{FileReader, IFileReader}
 import org.apache.spark.sql.SparkSession
 
@@ -17,7 +18,14 @@ import org.apache.spark.sql.SparkSession
       .getOrCreate()
 
     val fileReader: IFileReader = new FileReader(sc)
-    val df = fileReader.readFile(inputFile)
+    val inputDf = fileReader.readFile(inputFile)
+
+    inputDf.show()
+
+    val oddValuesDf = SparkValueIdentifier.IdentifyOddValues(inputDf)
+
+    oddValuesDf.show()
+
 
   } catch {
     case e: Exception => println(e.getMessage)
