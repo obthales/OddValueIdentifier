@@ -1,4 +1,4 @@
-import org.apache.spark.{SparkConf, SparkContext}
+import IO.Reader.{FileReader, IFileReader}
 import org.apache.spark.sql.SparkSession
 
  object OddValueIdentifier extends App {
@@ -11,13 +11,13 @@ import org.apache.spark.sql.SparkSession
     val outputFile = args(1)
     val credentialsFile = args(2)
 
-    //      val conf = new SparkConf().setAppName("OddValueIdentifier").setMaster("local[1]")
-    //      val sc = SparkContext.getOrCreate(conf)
-    //
-          val spark = SparkSession.builder()
-            .master("local[1]")
-            .appName("OddValueIdentifier")
-            .getOrCreate();
+    val sc = SparkSession.builder()
+      .master("local[1]")
+      .appName("OddValueIdentifier")
+      .getOrCreate()
+
+    val fileReader: IFileReader = new FileReader(sc)
+    val df = fileReader.readFile(inputFile)
 
   } catch {
     case e: Exception => println(e.getMessage)
