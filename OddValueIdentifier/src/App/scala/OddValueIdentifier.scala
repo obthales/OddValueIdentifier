@@ -1,5 +1,6 @@
 import Core.SparkValueIdentifier
 import IO.Reader.{FileReader, IFileReader}
+import IO.Writer.FileWriter
 import org.apache.spark.sql.SparkSession
 
  object OddValueIdentifier extends App {
@@ -20,13 +21,9 @@ import org.apache.spark.sql.SparkSession
     val fileReader: IFileReader = new FileReader(sc)
     val inputDf = fileReader.readFile(inputFile)
 
-    inputDf.show()
-
     val oddValuesDf = SparkValueIdentifier.IdentifyOddValues(inputDf)
 
-    oddValuesDf.show()
-
-
+    FileWriter.writeToFile(oddValuesDf, outputFile)
   } catch {
     case e: Exception => println(e.getMessage)
   }

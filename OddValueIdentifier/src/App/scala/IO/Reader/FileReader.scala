@@ -12,9 +12,10 @@ class FileReader(sc: SparkSession) extends IFileReader {
     val fileName = Paths.get(filePath).getFileName
     val extension = fileName.toString.split("\\.").last
 
+    //We can add new file extractors to support new file types
     val df = extension match {
-      case "csv" => sc.read.csv(filePath)
-      case "tsv" => sc.read.format("com.databricks.spark.csv").option("delimiter", "\t").load(filePath)
+      case "csv" => sc.read.option("header","true").csv(filePath)
+      case "tsv" => sc.read.option("header","true").format("com.databricks.spark.csv").option("delimiter", "\t").load(filePath)
       case _ => throw new IllegalArgumentException("Unsupported file format.")
     }
 
