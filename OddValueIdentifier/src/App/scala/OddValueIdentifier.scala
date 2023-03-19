@@ -1,4 +1,4 @@
-import Core.SparkValueIdentifier
+import Core.{SparkValueIdentifier, ValueIdentifier}
 import IO.Reader.{FileReader, IFileReader}
 import IO.Writer.FileWriter
 import org.apache.spark.sql.SparkSession
@@ -13,19 +13,16 @@ import org.apache.spark.sql.SparkSession
     val outputFile = args(1)
     val credentialsFile = args(2)
 
-    val sc = SparkSession.builder()
+    val spark = SparkSession.builder()
       .master("local[1]")
       .appName("OddValueIdentifier")
       .getOrCreate()
 
-    import sc.implicits._
-    val testDf = Seq((1,2), (1,3), (1,3), (2,4), (2,4), (2,4)).toDF("key", "value")
-    testDf.show()
-
-    val fileReader: IFileReader = new FileReader(sc)
+    val fileReader: IFileReader = new FileReader(spark)
     val inputDf = fileReader.readFile(inputFile)
 
-    val oddValuesDf = SparkValueIdentifier.IdentifyOddValues(inputDf)
+    val valueIdentifier: ValueIdentifier = new SparkValueIdentifier(spark)
+    val oddValuesDf = valueIdentifier.IdentifyOddValues(inputDf)
 
     FileWriter.writeToFile(oddValuesDf, outputFile)
   } catch {
