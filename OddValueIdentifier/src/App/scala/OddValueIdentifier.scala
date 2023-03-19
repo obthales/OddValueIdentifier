@@ -18,6 +18,10 @@ import org.apache.spark.sql.SparkSession
       .appName("OddValueIdentifier")
       .getOrCreate()
 
+    import sc.implicits._
+    val testDf = Seq((1,2), (1,3), (1,3), (2,4), (2,4), (2,4)).toDF("key", "value")
+    testDf.show()
+
     val fileReader: IFileReader = new FileReader(sc)
     val inputDf = fileReader.readFile(inputFile)
 
